@@ -3,6 +3,8 @@ package uz.pdp.money_transfer_demo.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 import uz.pdp.money_transfer_demo.entity.Card;
 import uz.pdp.money_transfer_demo.entity.Income;
@@ -30,10 +32,9 @@ public class TransferService {
     CardRepository cardRepository;
 
 
-    public HttpEntity<?> transferMoney(HttpServletRequest httpServletRequest, OutComeDto outComeDto) {
-        String token = httpServletRequest.getHeader("Authorization");
-        token=token.substring(7);
-        String username = jwtProvider.getUsernameFromToken(token);
+    public HttpEntity<?> transferMoney( OutComeDto outComeDto) {
+        User user= (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = user.getUsername();
         Optional<Card> optionalCard = cardRepository.findById(outComeDto.getFromCardId());
         if (!optionalCard.isPresent())
             return ResponseEntity.status(409).body("Your card not found");

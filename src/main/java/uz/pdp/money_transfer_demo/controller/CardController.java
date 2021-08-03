@@ -26,30 +26,30 @@ public class CardController {
 
 
     @GetMapping("/myInfo")
-    public ResponseEntity<?> getMyCard(HttpServletRequest httpServletRequest){
-        ResponseEntity<?> myCard = cardService.getMyCard(httpServletRequest);
+    public ResponseEntity<?> getMyCard(){
+        ResponseEntity<?> myCard = cardService.getMyCard();
         return myCard;
     }
 
 
     @PostMapping("/add")
-    public HttpEntity<?> cardAdd(HttpServletRequest httpServletRequest, @RequestBody CardDto cardDto){
-        return cardService.addCard(httpServletRequest, cardDto);
+    public HttpEntity<?> cardAdd( @RequestBody CardDto cardDto){
+        return cardService.addCard(cardDto);
     }
 
     @DeleteMapping("/delete/{id}")
-    public HttpEntity<?> deleteCard(HttpServletRequest httpServletRequest,@PathVariable Integer id){
-        return cardService.deleteCard(httpServletRequest,id);
+    public HttpEntity<?> deleteCard(@PathVariable Integer id){
+        return cardService.deleteCard(id);
     }
 
     @GetMapping("/income")
-    public ResponseEntity<?> getMyCardIncomeList(HttpServletRequest httpServletRequest){
-        ResponseEntity<?> myCardIncome = cardService.getIncomeMoneyList(httpServletRequest);
+    public ResponseEntity<?> getMyCardIncomeList(){
+        ResponseEntity<?> myCardIncome = cardService.getIncomeMoneyList();
         return myCardIncome;
     }
     @GetMapping("/outcome")
-    public ResponseEntity<?> getMyCardOutcomeList(HttpServletRequest httpServletRequest){
-        ResponseEntity<?> myCardOutcome = cardService.getOutcomeMoneyList(httpServletRequest);
+    public ResponseEntity<?> getMyCardOutcomeList(){
+        ResponseEntity<?> myCardOutcome = cardService.getOutcomeMoneyList();
         return myCardOutcome;
     }
 }

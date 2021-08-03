@@ -18,8 +18,8 @@ public class TransferController {
     TransferService transferService;
 
     @PostMapping("/send")
-    public HttpEntity<?> transferMoney(HttpServletRequest httpServletRequest, @RequestBody OutComeDto outComeDto){
-        return transferService.transferMoney(httpServletRequest,outComeDto);
+    public HttpEntity<?> transferMoney( @RequestBody OutComeDto outComeDto){
+        return transferService.transferMoney(outComeDto);
 
     }
 

@@ -3,6 +3,8 @@ package uz.pdp.money_transfer_demo.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 import uz.pdp.money_transfer_demo.controller.CardController;
 import uz.pdp.money_transfer_demo.entity.Card;
@@ -32,10 +34,9 @@ public class CardService {
     @Autowired
     OutcomRepository outcomRepository;
 
-    public ResponseEntity<?> getMyCard(HttpServletRequest httpServletRequest){
-        String token = httpServletRequest.getHeader("Authorization");
-        token=token.substring(7);
-        String username = jwtProvider.getUsernameFromToken(token);
+    public ResponseEntity<?> getMyCard(){
+        User user= (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = user.getUsername();
         List<Card> byUsername = cardRepository.findByUsername(username);
         if (byUsername.isEmpty())
             return ResponseEntity.status(409).body("You have not card");
@@ -44,10 +45,9 @@ public class CardService {
 
     }
 
-    public HttpEntity<?> addCard(HttpServletRequest httpServletRequest, CardDto cardDto) {
-        String token = httpServletRequest.getHeader("Authorization");
-        token=token.substring(7);
-        String username = jwtProvider.getUsernameFromToken(token);
+    public HttpEntity<?> addCard( CardDto cardDto) {
+        User user= (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = user.getUsername();
         Card newCard=new Card();
         newCard.setBalance(cardDto.getBalance());
         newCard.setExpiredDate(cardDto.getExpiredDate());
@@ -57,10 +57,9 @@ public class CardService {
         return ResponseEntity.ok("Card added");
     }
 
-    public HttpEntity<?> deleteCard(HttpServletRequest httpServletRequest,Integer id) {
-        String token = httpServletRequest.getHeader("Authorization");
-        token=token.substring(7);
-        String username = jwtProvider.getUsernameFromToken(token);
+    public HttpEntity<?> deleteCard(Integer id) {
+        User user= (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = user.getUsername();
         Optional<Card> optionalCard = cardRepository.findById(id);
         if (!optionalCard.isPresent())
             return ResponseEntity.status(409).body("Card not found");
@@ -72,10 +71,9 @@ public class CardService {
 
     }
 
-    public ResponseEntity<?> getIncomeMoneyList(HttpServletRequest httpServletRequest) {
-        String token = httpServletRequest.getHeader("Authorization");
-        token=token.substring(7);
-        String username = jwtProvider.getUsernameFromToken(token);
+    public ResponseEntity<?> getIncomeMoneyList() {
+        User user= (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = user.getUsername();
         List<Card> optionalCard = cardRepository.findByUsername(username);
         if (optionalCard.isEmpty())
             return ResponseEntity.status(409).body("You have not crd yet");
@@ -91,10 +89,9 @@ public class CardService {
         return ResponseEntity.status(200).body(allByToAllCardId);
     }
 
-    public ResponseEntity<?> getOutcomeMoneyList(HttpServletRequest httpServletRequest) {
-        String token = httpServletRequest.getHeader("Authorization");
-        token=token.substring(7);
-        String username = jwtProvider.getUsernameFromToken(token);
+    public ResponseEntity<?> getOutcomeMoneyList() {
+        User user= (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = user.getUsername();
         List<Card> optionalCard = cardRepository.findByUsername(username);
         if (optionalCard.isEmpty())
             return ResponseEntity.status(409).body("You have not crd yet");
